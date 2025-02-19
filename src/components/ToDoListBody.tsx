@@ -43,28 +43,38 @@ class ToDoListBody extends React.PureComponent {
     ));
   };
 
-  handleClick = (): void => {
-    if (!this.inputRef.current) return;
-    let input = this.inputRef.current.value;
-    const task: TaskObject = {
-      name: input,
-      timestamp: Date.now(),
-      isComplete: false,
-    };
-    this.Tasks.unshift(task);
-    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
-    this.inputRef.current.value = "";
-    this.setState({
-      tasksLength: this.Tasks.length,
-      renderTasks: [...this.Tasks],
-    });
+  addTask = (
+    event:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    if (!this.inputRef.current || this.inputRef.current.value === "") return;
+    if (
+      (event.type === "keyup" && // тут сразу проверяем тип ивента
+        (event as React.KeyboardEvent).key === "Enter") || // это я хз что, джптшка мне посоветовала. на просто event.key TS ругается
+      event.type === "click"
+    ) {
+      let input = this.inputRef.current.value;
+      const task: TaskObject = {
+        name: input,
+        timestamp: Date.now(),
+        isComplete: false,
+      };
+      this.Tasks.unshift(task);
+      localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+      this.inputRef.current.value = "";
+      this.setState({
+        tasksLength: this.Tasks.length,
+        renderTasks: [...this.Tasks],
+      });
+    } else return;
   };
-  
+
   render() {
     return (
       <div className="background">
         <MainLogo />
-        <Input callback={this.handleClick} inputRef={this.inputRef} />
+        <Input callback={this.addTask} inputRef={this.inputRef} />
         <BottomButtons />
         <Counter taskCount={this.state.tasksLength} />
         <TaskList

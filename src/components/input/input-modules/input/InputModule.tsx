@@ -1,6 +1,7 @@
 import React from "react";
 import "./inputModule.css";
 interface InputProps {
+  callback: any;
   inputRef: any;
 }
 class InputModule extends React.PureComponent<InputProps> {
@@ -10,6 +11,7 @@ class InputModule extends React.PureComponent<InputProps> {
         className="input"
         placeholder="Добавить новую задачу..."
         ref={this.props.inputRef}
+        onKeyUp={this.props.callback}
       ></input>
     );
   }

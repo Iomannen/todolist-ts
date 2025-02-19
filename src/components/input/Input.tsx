@@ -11,7 +11,10 @@ class Input extends React.PureComponent<InputProps> {
   render() {
     return (
       <div className="taskAdditionBlock">
-        <InputModule inputRef={this.props.inputRef} />
+        <InputModule
+          inputRef={this.props.inputRef}
+          callback={this.props.callback}
+        />
         <InputButton callback={this.props.callback} />
       </div>
     );
