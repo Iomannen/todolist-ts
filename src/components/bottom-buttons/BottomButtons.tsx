@@ -7,12 +7,12 @@ class BottomButtons extends React.PureComponent {
     return (
       <div className="bottombuttons_block">
         <div className="firstbutton_block">
-          <BottomButton />
-          <BottomButton />
-          <BottomButton />
+          <BottomButton textContent={"Все задачи"} />
+          <BottomButton textContent={"Завершенные"} />
+          <BottomButton textContent={"В процессе"} />
         </div>
         <div className="secondbutton_block">
-          <BottomButton />
+          <BottomButton textContent={"Удалить"} />
         </div>
       </div>
     );

@@ -1,11 +1,15 @@
 import React from "react";
 import "./counterModule.css";
-class CounterModule extends React.PureComponent {
+interface CounterProps {
+  taskCount: number | string;
+  textContent: string;
+}
+class CounterModule extends React.PureComponent<CounterProps> {
   render() {
     return (
       <div className="tasksCounterModule">
-        <div className="tasksText">Заглушка текст</div>
-        <div className="tasksCount">0</div>
+        <div className="tasksText">{this.props.textContent}</div>
+        <div className="tasksCount">{this.props.taskCount}</div>
       </div>
     );
   }

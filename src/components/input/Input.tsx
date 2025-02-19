@@ -2,12 +2,17 @@ import React from "react";
 import "./input.css";
 import InputButton from "./input-modules/input-button/InputButton";
 import InputModule from "./input-modules/input/InputModule";
-class Input extends React.PureComponent {
+
+interface InputProps {
+  callback: any;
+  inputRef: any;
+}
+class Input extends React.PureComponent<InputProps> {
   render() {
     return (
       <div className="taskAdditionBlock">
-        <InputModule />
-        <InputButton />
+        <InputModule inputRef={this.props.inputRef} />
+        <InputButton callback={this.props.callback} />
       </div>
     );
   }
