@@ -37,10 +37,18 @@ class ToDoListBody extends React.PureComponent {
   }
 
   renderTasks = (tasksForRender: Array<TaskObject>) => {
-    return tasksForRender.map((task: TaskObject) => (
+    return tasksForRender.map((task: TaskObject, index: number) => (
       <div className="task" key={`${task.name}${task.timestamp}`}>
         <label className="checkbox_label">
-          <input className="task_checkbox" type="checkbox"></input>
+          <input
+            className="task_checkbox"
+            type="checkbox"
+            onChange={() => {
+              this.handleCheckBox(task, index);
+            }}
+            checked={task.isComplete}
+            disabled={task.isComplete}
+          ></input>
           <span className="custom_checkbox"></span>
         </label>
         <input
@@ -78,6 +86,8 @@ class ToDoListBody extends React.PureComponent {
         tasksLength: this.Tasks.length,
         renderTasks: [...this.Tasks],
       });
+      // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
+      this.callback();
     } else return;
   };
 
@@ -86,20 +96,53 @@ class ToDoListBody extends React.PureComponent {
       el.current.classList.remove("active")
     );
     ref.classList.add("active");
+    // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
+    this.callback();
+  };
+
+  handleCheckBox = (task: any, index: number) => {
+    this.Tasks.splice(index, 1);
+    task.isComplete = true;
+    task.timestamp = Date.now();
+    this.Tasks.unshift(task);
+    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+    this.setState({ renderTasks: [...this.Tasks] });
+  };
+  callback = (): void => {
     const refs = Object.keys(this.buttonRefs);
+    const completeTasks: Array<TaskObject> = this.Tasks.filter(
+      (task) => task.isComplete === true
+    );
+    const inProcessTasks: Array<TaskObject> = this.Tasks.filter(
+      (task) => task.isComplete === false
+    );
     refs.forEach((ref) => {
       const button = this.buttonRefs[ref].current;
       if (!button) return;
       if (button.className === "bottombutton active") {
         button.innerText === "Все задачи"
-          ? this.setState({ renderTasks: this.Tasks })
+          ? this.setState({
+              renderTasks: [...this.Tasks],
+              tasksLength: this.Tasks.length,
+            })
           : button.innerText === "Завершенные"
-          ? this.setState({ renderTasks: this.CompleteTasks })
-          : this.setState({ renderTasks: this.Tasks });
+          ? this.setState({
+              renderTasks: completeTasks,
+              tasksLength: this.Tasks.length,
+            })
+          : this.setState({
+              renderTasks: inProcessTasks,
+              tasksLength: this.Tasks.length,
+            });
       }
     });
   };
-
+  clearCompleteTasks = () => {
+    this.Tasks = this.Tasks.filter((task) => task.isComplete === false);
+    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+    // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
+    this.callback();
+  };
   render() {
     return (
       <div className="background">
@@ -107,6 +150,7 @@ class ToDoListBody extends React.PureComponent {
         <Input callback={this.addTask} inputRef={this.inputRef} />
         <BottomButtons
           callback={this.handleClickBottom}
+          deleteCallback={this.clearCompleteTasks}
           buttonRefs={this.buttonRefs}
         />
         <Counter taskCount={this.state.tasksLength} />

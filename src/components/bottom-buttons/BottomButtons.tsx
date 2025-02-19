@@ -3,7 +3,8 @@ import BottomButton from "./bottom-buttons-modules/BottomButton";
 import "./bottomButtons.css";
 
 interface BottomButtonsProps {
-  callback: any;
+  callback?: any;
+  deleteCallback?: any;
   buttonRefs: any;
 }
 class BottomButtons extends React.PureComponent<BottomButtonsProps> {
@@ -30,7 +31,7 @@ class BottomButtons extends React.PureComponent<BottomButtonsProps> {
         <div className="secondbutton_block">
           <BottomButton
             textContent={"Удалить"}
-            callback={this.props.callback}
+            callback={this.props.deleteCallback}
             buttonRef={this.props.buttonRefs.deleteRef}
           />
         </div>
