@@ -1,8 +1,8 @@
 import React from "react";
 import "./inputModule.css";
 interface InputProps {
-  callback: any;
   inputRef: any;
+  callback: any;
 }
 class InputModule extends React.PureComponent<InputProps> {
   render() {

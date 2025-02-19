@@ -2,17 +2,37 @@ import React from "react";
 import BottomButton from "./bottom-buttons-modules/BottomButton";
 import "./bottomButtons.css";
 
-class BottomButtons extends React.PureComponent {
+interface BottomButtonsProps {
+  callback: any;
+  buttonRefs: any;
+}
+class BottomButtons extends React.PureComponent<BottomButtonsProps> {
   render() {
     return (
       <div className="bottombuttons_block">
         <div className="firstbutton_block">
-          <BottomButton textContent={"Все задачи"} />
-          <BottomButton textContent={"Завершенные"} />
-          <BottomButton textContent={"В процессе"} />
+          <BottomButton
+            textContent={"Все задачи"}
+            callback={this.props.callback}
+            buttonRef={this.props.buttonRefs.allTasksRef}
+          />
+          <BottomButton
+            textContent={"Завершенные"}
+            callback={this.props.callback}
+            buttonRef={this.props.buttonRefs.completeTasksRef}
+          />
+          <BottomButton
+            textContent={"В процессе"}
+            callback={this.props.callback}
+            buttonRef={this.props.buttonRefs.inProcessTasksRef}
+          />
         </div>
         <div className="secondbutton_block">
-          <BottomButton textContent={"Удалить"} />
+          <BottomButton
+            textContent={"Удалить"}
+            callback={this.props.callback}
+            buttonRef={this.props.buttonRefs.deleteRef}
+          />
         </div>
       </div>
     );

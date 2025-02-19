@@ -13,30 +13,41 @@ export type TaskObject = {
 
 class ToDoListBody extends React.PureComponent {
   Tasks: Array<TaskObject> = [];
+  CompleteTasks: Array<TaskObject> = [];
 
+  buttonRefs: Record<string, React.RefObject<HTMLButtonElement | null>> = {
+    allTasksRef: React.createRef<HTMLButtonElement>(),
+    completeTasksRef: React.createRef<HTMLButtonElement>(),
+    inProcessTasksRef: React.createRef<HTMLButtonElement>(),
+    deleteRef: React.createRef<HTMLButtonElement>(),
+  };
   inputRef = React.createRef<HTMLInputElement>();
 
   state = {
     tasksLength: this.Tasks.length,
     renderTasks: this.Tasks,
-    render: 0,
   };
 
   componentDidMount(): void {
     const localStorageTasks: string | null = localStorage.getItem("tasks");
     if (localStorageTasks === null) return;
+    this.buttonRefs.allTasksRef.current?.classList.add("active");
     this.Tasks = [...JSON.parse(localStorageTasks)];
     this.setState({ tasksLength: this.Tasks.length, renderTasks: this.Tasks });
   }
 
   renderTasks = (tasksForRender: Array<TaskObject>) => {
     return tasksForRender.map((task: TaskObject) => (
-      <div className="task" key={Math.random()}>
+      <div className="task" key={`${task.name}${task.timestamp}`}>
         <label className="checkbox_label">
           <input className="task_checkbox" type="checkbox"></input>
           <span className="custom_checkbox"></span>
         </label>
-        <input className="task_name" placeholder={task.name}></input>
+        <input
+          className="task_name"
+          placeholder={task.name}
+          disabled={true}
+        ></input>
         <button className="edit_button"></button>
         <button className="delete_button"></button>
       </div>
@@ -70,12 +81,34 @@ class ToDoListBody extends React.PureComponent {
     } else return;
   };
 
+  handleClickBottom = (ref: HTMLButtonElement): void => {
+    Object.values(this.buttonRefs).forEach((el: any) =>
+      el.current.classList.remove("active")
+    );
+    ref.classList.add("active");
+    const refs = Object.keys(this.buttonRefs);
+    refs.forEach((ref) => {
+      const button = this.buttonRefs[ref].current;
+      if (!button) return;
+      if (button.className === "bottombutton active") {
+        button.innerText === "Все задачи"
+          ? this.setState({ renderTasks: this.Tasks })
+          : button.innerText === "Завершенные"
+          ? this.setState({ renderTasks: this.CompleteTasks })
+          : this.setState({ renderTasks: this.Tasks });
+      }
+    });
+  };
+
   render() {
     return (
       <div className="background">
         <MainLogo />
         <Input callback={this.addTask} inputRef={this.inputRef} />
-        <BottomButtons />
+        <BottomButtons
+          callback={this.handleClickBottom}
+          buttonRefs={this.buttonRefs}
+        />
         <Counter taskCount={this.state.tasksLength} />
         <TaskList
           renderCallback={this.renderTasks}
