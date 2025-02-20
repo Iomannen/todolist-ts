@@ -32,6 +32,7 @@ class ToDoListBody extends React.PureComponent {
     const localStorageTasks: string | null = localStorage.getItem("tasks");
     if (localStorageTasks === null) return;
     this.buttonRefs.allTasksRef.current?.classList.add("active");
+    this.buttonRefs.deleteRef.current?.classList.add("disappear");
     this.Tasks = [...JSON.parse(localStorageTasks)];
     const completeTasks: Array<TaskObject> = this.Tasks.filter(
       (task) => task.isComplete === true
@@ -139,6 +140,10 @@ class ToDoListBody extends React.PureComponent {
       el.current.classList.remove("active")
     );
     ref.classList.add("active");
+    if (ref.innerHTML === "Завершенные") {
+      this.buttonRefs.deleteRef.current?.classList.remove("disappear");
+    } else this.buttonRefs.deleteRef.current?.classList.add("disappear");
+
     // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
     this.callback();
   };
