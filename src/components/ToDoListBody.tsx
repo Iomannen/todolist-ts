@@ -9,10 +9,12 @@ export type TaskObject = {
   name: string;
   timestamp: number;
   isComplete: boolean;
+  editing: boolean;
 };
 class ToDoListBody extends React.PureComponent {
   Tasks: Array<TaskObject> = [];
   taskRefs: any = [];
+  taskInputRefs: any = [];
 
   buttonRefs: Record<string, React.RefObject<HTMLButtonElement | null>> = {
     allTasksRef: React.createRef<HTMLButtonElement>(),
@@ -54,7 +56,9 @@ class ToDoListBody extends React.PureComponent {
     });
     tasksForRender.forEach((task) => {
       const taskRef = React.createRef<HTMLDivElement>();
+      const inputRef = React.createRef<HTMLInputElement>();
       this.taskRefs.push(taskRef);
+      this.taskInputRefs.push(inputRef);
     });
     return tasksForRender.map((task: TaskObject, index: number) => (
       <div
@@ -77,10 +81,22 @@ class ToDoListBody extends React.PureComponent {
         <input
           className="task_name"
           placeholder={task.name}
-          disabled={true}
+          disabled={!task.editing}
+          ref={this.taskInputRefs[index]}
+          onBlur={() => {
+            this.saveTaskName(task, index, this.taskInputRefs);
+          }}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              this.saveTaskName(task, index, this.taskInputRefs);
+            }
+          }}
         ></input>
         <button
           className={`edit_button ${task.isComplete ? "disappear" : ""}`}
+          onClick={() => {
+            this.editTask(task, index, this.taskInputRefs);
+          }}
         ></button>
         <button
           className="delete_button"
@@ -108,6 +124,7 @@ class ToDoListBody extends React.PureComponent {
         name: input,
         timestamp: Date.now(),
         isComplete: false,
+        editing: false,
       };
       this.Tasks.unshift(task);
       localStorage.setItem("tasks", JSON.stringify(this.Tasks));
@@ -121,7 +138,7 @@ class ToDoListBody extends React.PureComponent {
     } else return;
   };
 
-  deleteTask = (index: number, taskRefs: any) => {
+  deleteTask = (index: number, taskRefs: any): void => {
     const updatedTasks = this.Tasks.filter((_, i) => i !== index);
     this.Tasks = [...updatedTasks];
     localStorage.setItem("tasks", JSON.stringify(this.Tasks));
@@ -132,6 +149,36 @@ class ToDoListBody extends React.PureComponent {
       renderTasks: this.Tasks,
       tasksLength: this.Tasks.length,
       completeTasksLength: completeTasks.length,
+    });
+  };
+  saveTaskName = (task: any, index: number, taskInputRefs: any) => {
+    const updatedTasks = this.Tasks.filter((_, i) => i !== index);
+    const updatedTask: TaskObject = {
+      name: taskInputRefs[index].current.value,
+      isComplete: false,
+      timestamp: task.timestamp,
+      editing: false,
+    };
+    this.Tasks = [updatedTask, ...updatedTasks];
+    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+    this.setState({
+      renderTasks: this.Tasks,
+    });
+  };
+  editTask = (task: any, index: number, taskInputRefs: any) => {
+    taskInputRefs[index].current.focus();
+    taskInputRefs[index].current.value = task.name;
+    const updatedTasks = this.Tasks.filter((_, i) => i !== index);
+    const updatedTask: TaskObject = {
+      name: task.name,
+      isComplete: false,
+      timestamp: task.timestamp,
+      editing: true,
+    };
+    this.Tasks = [updatedTask, ...updatedTasks];
+    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+    this.setState({
+      renderTasks: this.Tasks,
     });
   };
 
@@ -154,6 +201,7 @@ class ToDoListBody extends React.PureComponent {
       name: task.name,
       isComplete: true,
       timestamp: Date.now(),
+      editing: false,
     };
     const newTasks = [updatedTask, ...updatedTasks];
     localStorage.setItem("tasks", JSON.stringify(newTasks));
@@ -197,7 +245,8 @@ class ToDoListBody extends React.PureComponent {
       }
     });
   };
-  clearCompleteTasks = () => {
+
+  clearCompleteTasks = (): void => {
     this.Tasks = this.Tasks.filter((task) => task.isComplete === false);
     localStorage.setItem("tasks", JSON.stringify(this.Tasks));
     // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
