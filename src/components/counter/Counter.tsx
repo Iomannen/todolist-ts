@@ -4,6 +4,7 @@ import "./counter.css";
 import { TaskObject } from "../ToDoListBody";
 interface CounterProps {
   taskCount: number | string;
+  completeCount: number;
 }
 
 class Counter extends React.PureComponent<CounterProps> {
@@ -24,9 +25,7 @@ class Counter extends React.PureComponent<CounterProps> {
           textContent={"Все задачи"}
         />
         <CounterModule
-          taskCount={`${this.findCompleteTasksNumber()} из ${
-            this.props.taskCount
-          }`}
+          taskCount={`${this.props.completeCount} из ${this.props.taskCount}`}
           textContent={"Завершено"}
         />
       </div>

@@ -10,10 +10,9 @@ export type TaskObject = {
   timestamp: number;
   isComplete: boolean;
 };
-
 class ToDoListBody extends React.PureComponent {
   Tasks: Array<TaskObject> = [];
-  CompleteTasks: Array<TaskObject> = [];
+  taskRefs: any = [];
 
   buttonRefs: Record<string, React.RefObject<HTMLButtonElement | null>> = {
     allTasksRef: React.createRef<HTMLButtonElement>(),
@@ -24,6 +23,7 @@ class ToDoListBody extends React.PureComponent {
   inputRef = React.createRef<HTMLInputElement>();
 
   state = {
+    completeTasksLength: 0,
     tasksLength: this.Tasks.length,
     renderTasks: this.Tasks,
   };
@@ -33,12 +33,34 @@ class ToDoListBody extends React.PureComponent {
     if (localStorageTasks === null) return;
     this.buttonRefs.allTasksRef.current?.classList.add("active");
     this.Tasks = [...JSON.parse(localStorageTasks)];
-    this.setState({ tasksLength: this.Tasks.length, renderTasks: this.Tasks });
+    const completeTasks: Array<TaskObject> = this.Tasks.filter(
+      (task) => task.isComplete === true
+    );
+    this.setState({
+      tasksLength: this.Tasks.length,
+      renderTasks: this.Tasks,
+      completeTasksLength: completeTasks.length,
+    });
   }
 
   renderTasks = (tasksForRender: Array<TaskObject>) => {
+    tasksForRender.sort((a, b) => {
+      if (a.isComplete !== b.isComplete) {
+        return String(a.isComplete).localeCompare(String(b.isComplete)); // "pending" раньше "completed"
+      }
+      // Если статусы одинаковые, сортируем по второму полю (priority)
+      return b.timestamp - a.timestamp;
+    });
+    tasksForRender.forEach((task) => {
+      const taskRef = React.createRef<HTMLDivElement>();
+      this.taskRefs.push(taskRef);
+    });
     return tasksForRender.map((task: TaskObject, index: number) => (
-      <div className="task" key={`${task.name}${task.timestamp}`}>
+      <div
+        className="task"
+        key={`${task.name}${task.timestamp}`}
+        ref={this.taskRefs[index]}
+      >
         <label className="checkbox_label">
           <input
             className="task_checkbox"
@@ -56,8 +78,15 @@ class ToDoListBody extends React.PureComponent {
           placeholder={task.name}
           disabled={true}
         ></input>
-        <button className="edit_button"></button>
-        <button className="delete_button"></button>
+        <button
+          className={`edit_button ${task.isComplete ? "disappear" : ""}`}
+        ></button>
+        <button
+          className="delete_button"
+          onClick={() => {
+            this.deleteTask(index, this.taskRefs);
+          }}
+        ></button>
       </div>
     ));
   };
@@ -91,6 +120,20 @@ class ToDoListBody extends React.PureComponent {
     } else return;
   };
 
+  deleteTask = (index: number, taskRefs: any) => {
+    const updatedTasks = this.Tasks.filter((_, i) => i !== index);
+    this.Tasks = [...updatedTasks];
+    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+    const completeTasks: Array<TaskObject> = this.Tasks.filter(
+      (task) => task.isComplete === true
+    );
+    this.setState({
+      renderTasks: this.Tasks,
+      tasksLength: this.Tasks.length,
+      completeTasksLength: completeTasks.length,
+    });
+  };
+
   handleClickBottom = (ref: HTMLButtonElement): void => {
     Object.values(this.buttonRefs).forEach((el: any) =>
       el.current.classList.remove("active")
@@ -100,14 +143,23 @@ class ToDoListBody extends React.PureComponent {
     this.callback();
   };
 
-  handleCheckBox = (task: any, index: number) => {
-    this.Tasks.splice(index, 1);
-    task.isComplete = true;
-    task.timestamp = Date.now();
-    this.Tasks.unshift(task);
-    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
-    this.setState({ renderTasks: [...this.Tasks] });
+  handleCheckBox = (task: TaskObject, index: number): void => {
+    const updatedTasks = this.Tasks.filter((_, i) => i !== index);
+    const updatedTask: TaskObject = {
+      name: task.name,
+      isComplete: true,
+      timestamp: Date.now(),
+    };
+    const newTasks = [updatedTask, ...updatedTasks];
+    localStorage.setItem("tasks", JSON.stringify(newTasks));
+    const completeTasks = newTasks.filter((task) => task.isComplete);
+    this.Tasks = newTasks;
+    this.setState({
+      renderTasks: this.Tasks,
+      completeTasksLength: completeTasks.length,
+    });
   };
+
   callback = (): void => {
     const refs = Object.keys(this.buttonRefs);
     const completeTasks: Array<TaskObject> = this.Tasks.filter(
@@ -122,15 +174,18 @@ class ToDoListBody extends React.PureComponent {
       if (button.className === "bottombutton active") {
         button.innerText === "Все задачи"
           ? this.setState({
+              completeTasksLength: completeTasks.length,
               renderTasks: [...this.Tasks],
               tasksLength: this.Tasks.length,
             })
           : button.innerText === "Завершенные"
           ? this.setState({
+              completeTasksLength: completeTasks.length,
               renderTasks: completeTasks,
               tasksLength: this.Tasks.length,
             })
           : this.setState({
+              completeTasksLength: completeTasks.length,
               renderTasks: inProcessTasks,
               tasksLength: this.Tasks.length,
             });
@@ -143,6 +198,7 @@ class ToDoListBody extends React.PureComponent {
     // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
     this.callback();
   };
+
   render() {
     return (
       <div className="background">
@@ -153,7 +209,10 @@ class ToDoListBody extends React.PureComponent {
           deleteCallback={this.clearCompleteTasks}
           buttonRefs={this.buttonRefs}
         />
-        <Counter taskCount={this.state.tasksLength} />
+        <Counter
+          taskCount={this.state.tasksLength}
+          completeCount={this.state.completeTasksLength}
+        />
         <TaskList
           renderCallback={this.renderTasks}
           tasksForRender={this.state.renderTasks}
