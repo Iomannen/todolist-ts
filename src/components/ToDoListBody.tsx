@@ -166,8 +166,6 @@ class ToDoListBody extends React.PureComponent {
     });
   };
   editTask = (task: any, index: number, taskInputRefs: any) => {
-    taskInputRefs[index].current.focus();
-    taskInputRefs[index].current.value = task.name;
     const updatedTasks = this.Tasks.filter((_, i) => i !== index);
     const updatedTask: TaskObject = {
       name: task.name,
@@ -180,6 +178,12 @@ class ToDoListBody extends React.PureComponent {
     this.setState({
       renderTasks: this.Tasks,
     });
+    setTimeout(() => {
+      if (taskInputRefs[index]?.current) {
+        taskInputRefs[index].current.focus();
+        taskInputRefs[index].current.value = task.name;
+      }
+    }, 0);
   };
 
   handleClickBottom = (ref: HTMLButtonElement): void => {
