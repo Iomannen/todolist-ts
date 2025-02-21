@@ -151,7 +151,6 @@ class ToDoListBody extends React.PureComponent {
         tasksLength: this.Tasks.length,
         renderTasks: [...this.Tasks],
       });
-      // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
       this.callback();
       console.log(`render timestamp ${Date.now()}`);
     } else return;
@@ -213,8 +212,6 @@ class ToDoListBody extends React.PureComponent {
     if (ref.innerHTML === "Завершенные") {
       this.buttonRefs.deleteRef.current?.classList.remove("disappear");
     } else this.buttonRefs.deleteRef.current?.classList.add("disappear");
-
-    // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
     this.callback();
   };
 
@@ -272,7 +269,6 @@ class ToDoListBody extends React.PureComponent {
   clearCompleteTasks = (): void => {
     this.Tasks = this.Tasks.filter((task) => task.isComplete === false);
     localStorage.setItem("tasks", JSON.stringify(this.Tasks));
-    // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
     this.callback();
   };
 
