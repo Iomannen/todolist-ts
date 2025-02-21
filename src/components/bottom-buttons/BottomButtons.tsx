@@ -30,7 +30,7 @@ class BottomButtons extends React.PureComponent<BottomButtonsProps> {
         </div>
         <div className="secondbutton_block">
           <BottomButton
-            textContent={"Удалить"}
+            textContent={"Очистить"}
             callback={this.props.deleteCallback}
             buttonRef={this.props.buttonRefs.deleteRef}
           />

@@ -4,6 +4,8 @@ import Input from "./input/Input";
 import BottomButtons from "./bottom-buttons/BottomButtons";
 import Counter from "./counter/Counter";
 import TaskList from "./tasklist/TaskList";
+import { formatDistance, subSeconds } from "date-fns";
+import { ru } from "date-fns/locale";
 
 export type TaskObject = {
   name: string;
@@ -25,6 +27,7 @@ class ToDoListBody extends React.PureComponent {
   inputRef = React.createRef<HTMLInputElement>();
 
   state = {
+    hover: Date.now(),
     completeTasksLength: 0,
     tasksLength: this.Tasks.length,
     renderTasks: this.Tasks,
@@ -43,6 +46,7 @@ class ToDoListBody extends React.PureComponent {
       tasksLength: this.Tasks.length,
       renderTasks: this.Tasks,
       completeTasksLength: completeTasks.length,
+      hover: Date.now(),
     });
   }
 
@@ -65,6 +69,20 @@ class ToDoListBody extends React.PureComponent {
         className="task"
         key={`${task.name}${task.timestamp}`}
         ref={this.taskRefs[index]}
+        onMouseEnter={() => {
+          this.setState({ hover: Date.now() });
+          console.log(`Стейт таймстамп ${this.state.hover}`);
+          console.log(`Таск таймпстамп ${task.timestamp}`);
+        }}
+        title={`${task.isComplete ? "Завершена" : "Создана"} ${formatDistance(
+          subSeconds(task.timestamp, 0),
+          this.state.hover,
+          {
+            addSuffix: true,
+            locale: ru,
+            includeSeconds: true,
+          }
+        )}`}
       >
         <label className="checkbox_label">
           <input
@@ -135,6 +153,7 @@ class ToDoListBody extends React.PureComponent {
       });
       // эта хуйня внизу отслеживает состояние кнопки и рендерит список по этому принципу
       this.callback();
+      console.log(`render timestamp ${Date.now()}`);
     } else return;
   };
 
