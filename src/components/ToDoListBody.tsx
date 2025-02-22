@@ -4,7 +4,7 @@ import Input from "./input/Input";
 import BottomButtons from "./bottom-buttons/BottomButtons";
 import Counter from "./counter/Counter";
 import TaskList from "./tasklist/TaskList";
-import { formatDistance, subSeconds } from "date-fns";
+import { formatDistance } from "date-fns";
 import { ru } from "date-fns/locale";
 
 export type TaskObject = {
