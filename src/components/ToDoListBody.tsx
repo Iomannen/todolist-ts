@@ -96,7 +96,7 @@ class ToDoListBody extends React.Component {
           <span className="custom_checkbox"></span>
         </label>
         <input
-          className="task_name"
+          className={`task_name ${task.isComplete ? "completedtask_name" : ""}`}
           placeholder={task.name}
           disabled={!task.editing}
           ref={this.taskInputRefs[index]}
