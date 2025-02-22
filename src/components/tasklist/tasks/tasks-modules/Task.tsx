@@ -5,7 +5,7 @@ interface TaskProps {
   tasksForRender: any;
 }
 
-class Task extends React.PureComponent<TaskProps> {
+class Task extends React.Component<TaskProps> {
   render() {
     return this.props.renderCallback(this.props.tasksForRender);
   }

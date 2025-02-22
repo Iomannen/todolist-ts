@@ -13,7 +13,7 @@ export type TaskObject = {
   isComplete: boolean;
   editing: boolean;
 };
-class ToDoListBody extends React.PureComponent {
+class ToDoListBody extends React.Component {
   Tasks: Array<TaskObject> = [];
   taskRefs: any = [];
   taskInputRefs: any = [];
@@ -46,9 +46,20 @@ class ToDoListBody extends React.PureComponent {
       tasksLength: this.Tasks.length,
       renderTasks: this.Tasks,
       completeTasksLength: completeTasks.length,
-      hover: Date.now(),
     });
   }
+
+  showTime = (task: any): string => {
+    return `${task.isComplete ? "Завершена" : "Создана"} ${formatDistance(
+      task.timestamp,
+      this.state.hover,
+      { addSuffix: true, locale: ru, includeSeconds: true }
+    )}`;
+  };
+
+  refreshStateTimestamp = (): void => {
+    this.setState({ hover: Date.now() });
+  };
 
   renderTasks = (tasksForRender: Array<TaskObject>) => {
     tasksForRender.sort((a, b) => {
@@ -69,20 +80,8 @@ class ToDoListBody extends React.PureComponent {
         className="task"
         key={`${task.name}${task.timestamp}`}
         ref={this.taskRefs[index]}
-        onMouseEnter={() => {
-          this.setState({ hover: Date.now() });
-          console.log(`Стейт таймстамп ${this.state.hover}`);
-          console.log(`Таск таймпстамп ${task.timestamp}`);
-        }}
-        title={`${task.isComplete ? "Завершена" : "Создана"} ${formatDistance(
-          subSeconds(task.timestamp, 0),
-          this.state.hover,
-          {
-            addSuffix: true,
-            locale: ru,
-            includeSeconds: true,
-          }
-        )}`}
+        onMouseEnter={this.refreshStateTimestamp}
+        title={this.showTime(task)}
       >
         <label className="checkbox_label">
           <input
@@ -152,7 +151,6 @@ class ToDoListBody extends React.PureComponent {
         renderTasks: [...this.Tasks],
       });
       this.callback();
-      console.log(`render timestamp ${Date.now()}`);
     } else return;
   };
 

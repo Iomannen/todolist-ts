@@ -5,7 +5,7 @@ interface TaskListProps {
   renderCallback: Function;
   tasksForRender: any;
 }
-class TaskList extends React.PureComponent<TaskListProps> {
+class TaskList extends React.Component<TaskListProps> {
   render() {
     return (
       <div className="tasklist">
