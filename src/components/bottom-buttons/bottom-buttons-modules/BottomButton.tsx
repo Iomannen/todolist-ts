@@ -3,7 +3,7 @@ import "./bottomButton.css";
 interface BottomButtonsContent {
   textContent: string;
   callback: any;
-  buttonRef: any;
+  buttonRef: React.RefObject<HTMLButtonElement | null>;
 }
 class BottomButton extends React.PureComponent<BottomButtonsContent> {
   render() {

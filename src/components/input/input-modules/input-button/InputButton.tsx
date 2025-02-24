@@ -2,7 +2,11 @@ import React from "react";
 import plus from "./input-button-assets/plus.svg";
 import "./inputButton.css";
 interface InputProps {
-  callback: any;
+  callback: (
+    event:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.MouseEvent<HTMLButtonElement>
+  ) => void;
 }
 class InputButton extends React.PureComponent<InputProps> {
   render() {

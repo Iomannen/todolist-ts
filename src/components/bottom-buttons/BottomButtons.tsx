@@ -3,9 +3,9 @@ import BottomButton from "./bottom-buttons-modules/BottomButton";
 import "./bottomButtons.css";
 
 interface BottomButtonsProps {
-  callback?: any;
-  deleteCallback?: any;
-  buttonRefs: any;
+  callback?: (ref: HTMLButtonElement) => void;
+  deleteCallback?: () => void;
+  buttonRefs: Record<string, React.RefObject<HTMLButtonElement | null>>;
 }
 class BottomButtons extends React.PureComponent<BottomButtonsProps> {
   render() {
