@@ -31,6 +31,7 @@ class ToDoListBody extends React.Component {
     inProcessTasksRef: React.createRef<HTMLButtonElement>(),
     deleteRef: React.createRef<HTMLButtonElement>(),
   };
+
   inputRef: React.RefObject<HTMLInputElement | null> =
     React.createRef<HTMLInputElement>();
 
@@ -178,6 +179,7 @@ class ToDoListBody extends React.Component {
       completeTasksLength: completeTasks.length,
     });
   };
+
   saveTaskName = (
     task: TaskObject,
     index: number,
@@ -198,6 +200,7 @@ class ToDoListBody extends React.Component {
       renderTasks: this.Tasks,
     });
   };
+
   editTask = (
     task: TaskObject,
     index: number,
