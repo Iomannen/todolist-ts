@@ -1,11 +1,11 @@
-import React from "react";
-import MainLogo from "./mainlogo/MainLogo";
-import Input from "./input/Input";
-import BottomButtons from "./bottom-buttons/BottomButtons";
-import Counter from "./counter/Counter";
-import TaskList from "./tasklist/TaskList";
-import { formatDistance } from "date-fns";
-import { ru } from "date-fns/locale";
+import React from 'react';
+import MainLogo from './mainlogo/MainLogo';
+import Input from './input/Input';
+import BottomButtons from './bottom-buttons/BottomButtons';
+import Counter from './counter/Counter';
+import TaskList from './tasklist/TaskList';
+import { formatDistance } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 export type TaskObject = {
   name: string;
@@ -43,13 +43,13 @@ class ToDoListBody extends React.Component {
   };
 
   componentDidMount(): void {
-    const localStorageTasks: string | null = localStorage.getItem("tasks");
+    const localStorageTasks: string | null = localStorage.getItem('tasks');
     if (localStorageTasks === null) return;
-    this.buttonRefs.allTasksRef.current?.classList.add("active");
-    this.buttonRefs.deleteRef.current?.classList.add("disappear");
+    this.buttonRefs.allTasksRef.current?.classList.add('active');
+    this.buttonRefs.deleteRef.current?.classList.add('disappear');
     this.Tasks = [...JSON.parse(localStorageTasks)];
     const completeTasks: Array<TaskObject> = this.Tasks.filter(
-      (task) => task.isComplete === true
+      (task) => task.isComplete === true,
     );
     this.setState({
       tasksLength: this.Tasks.length,
@@ -59,10 +59,10 @@ class ToDoListBody extends React.Component {
   }
 
   showTime = (task: TaskObject): string => {
-    return `${task.isComplete ? "Завершена" : "Создана"} ${formatDistance(
+    return `${task.isComplete ? 'Завершена' : 'Создана'} ${formatDistance(
       task.timestamp,
       this.state.hover,
-      { addSuffix: true, locale: ru, includeSeconds: true }
+      { addSuffix: true, locale: ru, includeSeconds: true },
     )}`;
   };
 
@@ -106,7 +106,7 @@ class ToDoListBody extends React.Component {
           <span className="custom_checkbox"></span>
         </label>
         <input
-          className={`task_name ${task.isComplete ? "completedtask_name" : ""}`}
+          className={`task_name ${task.isComplete ? 'completedtask_name' : ''}`}
           placeholder={task.name}
           disabled={!task.editing}
           ref={this.taskInputRefs[index]}
@@ -114,13 +114,13 @@ class ToDoListBody extends React.Component {
             this.saveTaskName(task, index, this.taskInputRefs);
           }}
           onKeyUp={(event) => {
-            if (event.key === "Enter") {
+            if (event.key === 'Enter') {
               this.saveTaskName(task, index, this.taskInputRefs);
             }
           }}
         ></input>
         <button
-          className={`edit_button ${task.isComplete ? "disappear" : ""}`}
+          className={`edit_button ${task.isComplete ? 'disappear' : ''}`}
           onClick={() => {
             this.editTask(task, index, this.taskInputRefs);
           }}
@@ -138,13 +138,13 @@ class ToDoListBody extends React.Component {
   addTask = (
     event:
       | React.KeyboardEvent<HTMLInputElement>
-      | React.MouseEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLButtonElement>,
   ): void => {
-    if (!this.inputRef.current || this.inputRef.current.value === "") return;
+    if (!this.inputRef.current || this.inputRef.current.value === '') return;
     if (
-      (event.type === "keyup" && // тут сразу проверяем тип ивента
-        (event as React.KeyboardEvent).key === "Enter") || // это я хз что, джптшка мне посоветовала. на просто event.key TS ругается
-      event.type === "click"
+      (event.type === 'keyup' && // тут сразу проверяем тип ивента
+        (event as React.KeyboardEvent).key === 'Enter') || // это я хз что, джптшка мне посоветовала. на просто event.key TS ругается
+      event.type === 'click'
     ) {
       let input: string | number = this.inputRef.current.value;
       const task: TaskObject = {
@@ -154,8 +154,8 @@ class ToDoListBody extends React.Component {
         editing: false,
       };
       this.Tasks.unshift(task);
-      localStorage.setItem("tasks", JSON.stringify(this.Tasks));
-      this.inputRef.current.value = "";
+      localStorage.setItem('tasks', JSON.stringify(this.Tasks));
+      this.inputRef.current.value = '';
       this.setState({
         tasksLength: this.Tasks.length,
         renderTasks: [...this.Tasks],
@@ -166,12 +166,12 @@ class ToDoListBody extends React.Component {
 
   deleteTask = (index: number): void => {
     const updatedTasks: Array<TaskObject> = this.Tasks.filter(
-      (_, i) => i !== index
+      (_, i) => i !== index,
     );
     this.Tasks = [...updatedTasks];
-    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+    localStorage.setItem('tasks', JSON.stringify(this.Tasks));
     const completeTasks: Array<TaskObject> = this.Tasks.filter(
-      (task) => task.isComplete === true
+      (task) => task.isComplete === true,
     );
     this.setState({
       renderTasks: this.Tasks,
@@ -183,10 +183,10 @@ class ToDoListBody extends React.Component {
   saveTaskName = (
     task: TaskObject,
     index: number,
-    taskInputRefs: Array<React.RefObject<HTMLInputElement | null>>
+    taskInputRefs: Array<React.RefObject<HTMLInputElement | null>>,
   ): void => {
     const updatedTasks: Array<TaskObject> = this.Tasks.filter(
-      (_, i) => i !== index
+      (_, i) => i !== index,
     );
     const updatedTask: TaskObject = {
       name: taskInputRefs[index]!.current!.value,
@@ -195,7 +195,7 @@ class ToDoListBody extends React.Component {
       editing: false,
     };
     this.Tasks = [updatedTask, ...updatedTasks];
-    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+    localStorage.setItem('tasks', JSON.stringify(this.Tasks));
     this.setState({
       renderTasks: this.Tasks,
     });
@@ -204,10 +204,10 @@ class ToDoListBody extends React.Component {
   editTask = (
     task: TaskObject,
     index: number,
-    taskInputRefs: Array<React.RefObject<HTMLInputElement | null>>
+    taskInputRefs: Array<React.RefObject<HTMLInputElement | null>>,
   ): void => {
     const updatedTasks: Array<TaskObject> = this.Tasks.filter(
-      (_, i) => i !== index
+      (_, i) => i !== index,
     );
     const updatedTask: TaskObject = {
       name: task.name,
@@ -216,7 +216,7 @@ class ToDoListBody extends React.Component {
       editing: true,
     };
     this.Tasks = [updatedTask, ...updatedTasks];
-    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+    localStorage.setItem('tasks', JSON.stringify(this.Tasks));
     this.setState({
       renderTasks: this.Tasks,
     });
@@ -230,18 +230,18 @@ class ToDoListBody extends React.Component {
 
   handleClickBottom = (ref: HTMLButtonElement): void => {
     Object.values(this.buttonRefs).forEach((el: any) =>
-      el.current.classList.remove("active")
+      el.current.classList.remove('active'),
     );
-    ref.classList.add("active");
-    if (ref.innerHTML === "Завершенные") {
-      this.buttonRefs.deleteRef.current?.classList.remove("disappear");
-    } else this.buttonRefs.deleteRef.current?.classList.add("disappear");
+    ref.classList.add('active');
+    if (ref.innerHTML === 'Завершенные') {
+      this.buttonRefs.deleteRef.current?.classList.remove('disappear');
+    } else this.buttonRefs.deleteRef.current?.classList.add('disappear');
     this.updateDisplayedTasks();
   };
 
   handleCheckBox = (task: TaskObject, index: number): void => {
     const updatedTasks: Array<TaskObject> = this.Tasks.filter(
-      (_, i) => i !== index
+      (_, i) => i !== index,
     );
     const updatedTask: TaskObject = {
       name: task.name,
@@ -250,9 +250,9 @@ class ToDoListBody extends React.Component {
       editing: false,
     };
     const newTasks: Array<TaskObject> = [updatedTask, ...updatedTasks];
-    localStorage.setItem("tasks", JSON.stringify(newTasks));
+    localStorage.setItem('tasks', JSON.stringify(newTasks));
     const completeTasks: Array<TaskObject> = newTasks.filter(
-      (task) => task.isComplete
+      (task) => task.isComplete,
     );
     this.Tasks = newTasks;
     this.setState({
@@ -264,39 +264,39 @@ class ToDoListBody extends React.Component {
   updateDisplayedTasks = (): void => {
     const refs: Array<string> = Object.keys(this.buttonRefs);
     const completeTasks: Array<TaskObject> = this.Tasks.filter(
-      (task) => task.isComplete === true
+      (task) => task.isComplete === true,
     );
     const inProcessTasks: Array<TaskObject> = this.Tasks.filter(
-      (task) => task.isComplete === false
+      (task) => task.isComplete === false,
     );
     refs.forEach((ref) => {
       const button: HTMLButtonElement | null = this.buttonRefs[ref].current;
       if (!button) return;
-      if (button.className === "bottombutton active") {
-        button.innerText === "Все задачи"
+      if (button.className === 'bottombutton active') {
+        button.innerText === 'Все задачи'
           ? this.setState({
               completeTasksLength: completeTasks.length,
               renderTasks: [...this.Tasks],
               tasksLength: this.Tasks.length,
             })
-          : button.innerText === "Завершенные"
-          ? this.setState({
-              completeTasksLength: completeTasks.length,
-              renderTasks: completeTasks,
-              tasksLength: this.Tasks.length,
-            })
-          : this.setState({
-              completeTasksLength: completeTasks.length,
-              renderTasks: inProcessTasks,
-              tasksLength: this.Tasks.length,
-            });
+          : button.innerText === 'Завершенные'
+            ? this.setState({
+                completeTasksLength: completeTasks.length,
+                renderTasks: completeTasks,
+                tasksLength: this.Tasks.length,
+              })
+            : this.setState({
+                completeTasksLength: completeTasks.length,
+                renderTasks: inProcessTasks,
+                tasksLength: this.Tasks.length,
+              });
       }
     });
   };
 
   clearCompleteTasks = (): void => {
     this.Tasks = this.Tasks.filter((task) => task.isComplete === false);
-    localStorage.setItem("tasks", JSON.stringify(this.Tasks));
+    localStorage.setItem('tasks', JSON.stringify(this.Tasks));
     this.updateDisplayedTasks();
   };
 

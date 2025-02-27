@@ -1,5 +1,5 @@
-import React from "react";
-import "./label.css";
+import React from 'react';
+import './label.css';
 
 class Label extends React.PureComponent {
   render() {

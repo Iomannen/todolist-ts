@@ -1,13 +1,13 @@
-import React from "react";
-import "./input.css";
-import InputButton from "./input-modules/input-button/InputButton";
-import InputModule from "./input-modules/input/InputModule";
+import React from 'react';
+import './input.css';
+import InputButton from './input-modules/input-button/InputButton';
+import InputModule from './input-modules/input/InputModule';
 
 interface InputProps {
   callback: (
     event:
       | React.KeyboardEvent<HTMLInputElement>
-      | React.MouseEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLButtonElement>,
   ) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
 }

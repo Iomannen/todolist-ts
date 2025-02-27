@@ -1,6 +1,6 @@
-import React from "react";
-import BottomButton from "./bottom-buttons-modules/BottomButton";
-import "./bottomButtons.css";
+import React from 'react';
+import BottomButton from './bottom-buttons-modules/BottomButton';
+import './bottomButtons.css';
 
 interface BottomButtonsProps {
   callback?: (ref: HTMLButtonElement) => void;
@@ -13,24 +13,24 @@ class BottomButtons extends React.PureComponent<BottomButtonsProps> {
       <div className="bottombuttons_block">
         <div className="firstbutton_block">
           <BottomButton
-            textContent={"Все задачи"}
+            textContent={'Все задачи'}
             callback={this.props.callback}
             buttonRef={this.props.buttonRefs.allTasksRef}
           />
           <BottomButton
-            textContent={"Завершенные"}
+            textContent={'Завершенные'}
             callback={this.props.callback}
             buttonRef={this.props.buttonRefs.completeTasksRef}
           />
           <BottomButton
-            textContent={"В процессе"}
+            textContent={'В процессе'}
             callback={this.props.callback}
             buttonRef={this.props.buttonRefs.inProcessTasksRef}
           />
         </div>
         <div className="secondbutton_block">
           <BottomButton
-            textContent={"Очистить"}
+            textContent={'Очистить'}
             callback={this.props.deleteCallback}
             buttonRef={this.props.buttonRefs.deleteRef}
           />

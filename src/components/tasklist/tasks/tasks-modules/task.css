@@ -38,7 +38,7 @@ input:focus {
   width: 20.5px;
   height: 20.5px;
   border: none;
-  background-image: url("../tasks-assets/on.svg");
+  background-image: url('../tasks-assets/on.svg');
   background-position: 50% 55%;
   background-size: 55%;
   background-repeat: no-repeat;
@@ -49,7 +49,7 @@ input:focus {
 }
 
 .task_name {
-  font-family: "Inter";
+  font-family: 'Inter';
   font-weight: 400;
   font-size: 14px;
   line-height: 140%;
@@ -83,18 +83,18 @@ button {
 .edit_button {
   width: 12px;
   height: 14px;
-  background-image: url("../tasks-assets/editoff.svg");
+  background-image: url('../tasks-assets/editoff.svg');
 }
 .delete_button {
   width: 12.48px;
   height: 14px;
-  background-image: url("../tasks-assets/delete.svg");
+  background-image: url('../tasks-assets/delete.svg');
 }
 .edit_button:hover {
-  background-image: url("../tasks-assets/editon.svg");
+  background-image: url('../tasks-assets/editon.svg');
 }
 .delete_button:hover {
-  background-image: url("../tasks-assets/deleteon.svg");
+  background-image: url('../tasks-assets/deleteon.svg');
 }
 button:hover {
   scale: 1.2;

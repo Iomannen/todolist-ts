@@ -1,5 +1,5 @@
-import React from "react";
-import "./counterModule.css";
+import React from 'react';
+import './counterModule.css';
 interface CounterProps {
   taskCount: number | string;
   textContent: string;

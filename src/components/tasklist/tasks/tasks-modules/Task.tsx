@@ -1,6 +1,6 @@
-import React from "react";
-import "./task.css";
-import { TaskObject } from "../../../ToDoListBody";
+import React from 'react';
+import './task.css';
+import { TaskObject } from '../../../ToDoListBody';
 interface TaskProps {
   renderCallback: (tasksForRender: Array<TaskObject>) => React.ReactNode;
   tasksForRender: Array<TaskObject>;

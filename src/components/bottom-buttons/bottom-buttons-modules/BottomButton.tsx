@@ -1,5 +1,5 @@
-import React from "react";
-import "./bottomButton.css";
+import React from 'react';
+import './bottomButton.css';
 interface BottomButtonsContent {
   textContent: string;
   callback: any;

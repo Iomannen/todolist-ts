@@ -1,7 +1,7 @@
-import React from "react";
-import CounterModule from "./counter-modules/CounterModule";
-import "./counter.css";
-import { TaskObject } from "../ToDoListBody";
+import React from 'react';
+import CounterModule from './counter-modules/CounterModule';
+import './counter.css';
+import { TaskObject } from '../ToDoListBody';
 interface CounterProps {
   taskCount: number | string;
   completeCount: number;
@@ -9,10 +9,10 @@ interface CounterProps {
 
 class Counter extends React.PureComponent<CounterProps> {
   findCompleteTasksNumber = (): number => {
-    const localStorageTasks = localStorage.getItem("tasks");
+    const localStorageTasks = localStorage.getItem('tasks');
     if (localStorageTasks === null) return 0;
     const completeTasks = JSON.parse(localStorageTasks).filter(
-      (task: TaskObject) => task.isComplete === true
+      (task: TaskObject) => task.isComplete === true,
     );
     return completeTasks.length;
   };
@@ -22,11 +22,11 @@ class Counter extends React.PureComponent<CounterProps> {
       <div className="tasksCounter">
         <CounterModule
           taskCount={this.props.taskCount}
-          textContent={"Все задачи"}
+          textContent={'Все задачи'}
         />
         <CounterModule
           taskCount={`${this.props.completeCount} из ${this.props.taskCount}`}
-          textContent={"Завершено"}
+          textContent={'Завершено'}
         />
       </div>
     );
